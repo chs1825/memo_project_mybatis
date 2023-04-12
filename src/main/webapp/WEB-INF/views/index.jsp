@@ -11,6 +11,8 @@
     <title>Title</title>
 </head>
 <body>
-hello docker!
+<h2>Hello Docker!</h2>
+<br>
+DB는 Docker container로 운영하는 프로젝트이기 때문에 Docker를 start했는지 확인부탁드렵니다.
 </body>
 </html>

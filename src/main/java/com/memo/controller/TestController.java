@@ -5,7 +5,10 @@ import com.memo.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.util.List;
@@ -48,4 +51,29 @@ public class TestController {
 
         return "mainPage";
     }
+
+    @PostMapping("/main/ajaxPost.do")
+    @ResponseBody
+    public String ajaxTest1(@RequestBody UserVO user){
+
+        System.out.println("user = " + user);
+        return "success";
+    }
+
+    @PostMapping("/main/ajaxNoAnotation.do")
+    @ResponseBody
+    public String ajaxTest2(UserVO param){
+        System.out.println("param = " + param);
+        return "oh!";
+    }
+
+    @PostMapping("/main/ajaxModel.do")
+    public String ajaxTest3(UserVO param, Model model){
+        System.out.println("param = " + param);
+
+        model.addAttribute("test","test");
+        return "jsonview";
+    }
+
+
 }
