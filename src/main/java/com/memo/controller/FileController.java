@@ -20,7 +20,7 @@ public class FileController {
     @PostMapping("/uploadFile.do")
     @ResponseBody
     public String fileUpload(@RequestParam MultipartFile file){
-        
+        //Requestparam 어노테이션을 쓰지 않으면 요청에 들어오는 enctype 또는 contenttype 적어야한다.
         String fileName = file.getOriginalFilename();
 
         log.info("fileName : {} ," , fileName);
