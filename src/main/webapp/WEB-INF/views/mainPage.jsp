@@ -18,12 +18,19 @@ hello world
 <button type="button" id="ajaxBtnReturnJson" name="ajaxBtnName">ajax 반환을 json에 model 담아서 반환 테스트</button>
 <br>
 <button type="button" id="ajaxBtnPost" name="ajaxBtnName">ajax Post 통신 테스트</button>
+<br>
+<button type="button" id="movePage" onclick="mvPage()">파일리스트 페이지 이동</button>
 
 </body>
 
 </html>
 
 <script>
+
+    function mvPage() {
+        location.href = "/filePage/start.do"
+    }
+
 
     let mBtn = document.querySelector('#ajaxBtnReturnJson');
     mBtn.addEventListener('click', function () {
@@ -38,7 +45,7 @@ hello world
         for (let key in data) {
             encodedData += encodeURIComponent(key) + "=" + encodeURIComponent(data[key]) + "&";
         }
-        encodedData = encodedData.substring(0,encodedData.length-1);
+        encodedData = encodedData.substring(0, encodedData.length - 1);
 
         xhr.open('POST', 'ajaxModel.do');
         xhr.setRequestHeader("Content-Type", 'application/x-www-form-urlencoded');

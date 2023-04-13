@@ -2,7 +2,6 @@ package com.memo.controller;
 
 import com.memo.service.TestService;
 import com.memo.vo.UserVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +14,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class TestController {
+public class RestController {
 
     private TestService service;
 
-    public TestController(TestService service) {
+    public RestController(TestService service) {
         this.service = service;
     }
 
