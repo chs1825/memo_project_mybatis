@@ -71,7 +71,7 @@ public class TestController {
     public String ajaxTest3(UserVO param, Model model){
         System.out.println("param = " + param);
 
-        model.addAttribute("test","test");
+        model.addAttribute("data",param);
         return "jsonview";
     }
 
