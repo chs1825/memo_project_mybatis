@@ -23,7 +23,7 @@ public class RestController {
     }
 
 
-    @RequestMapping("/")
+    @RequestMapping("/ㅁ")
     public String index(){
 
         String path1 = "/Users/iirtech_009/devFiles/ksl/file/video/main/202304";
