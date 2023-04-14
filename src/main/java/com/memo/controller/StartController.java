@@ -12,8 +12,6 @@ public class StartController {
 
     @GetMapping("/")
     public String loginPage(){
-
-
         return "loginPage";
     }
 

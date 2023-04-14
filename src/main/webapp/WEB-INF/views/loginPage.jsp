@@ -11,26 +11,60 @@
     <h2>Login</h2>
     <form>
         <div class="user-box">
-            <input type="text" name="" required="">
-            <label>Username</label>
+            <input type="text" id="userId" name="" required="" value="">
+            <label>UserId</label>
         </div>
         <div class="user-box">
-            <input type="password" name="" required="">
+            <input type="password" id="userPwd" name="" required="" value="">
             <label>Password</label>
         </div>
-        <a href="#">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            Submit
-        </a>
-        <br />
+        <button type="button" id="submitBtn">Submit</button>
+        <br/>
         <p>Don't have an account? <a href="#">Sign up</a></p>
     </form>
 </div>
 </body>
 <script>
+    let submitBtn = document.querySelector("#submitBtn");
+
+
+    function param2Json(data) {
+        console.log(data);
+
+        console.log(JSON.stringify(data));
+
+    }
+
+    function loginAction(uId, uPwd) {
+
+        let data = {uId, uPwd};
+        param2Json(data);
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'loginAction.do');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+
+            } else {
+                console.error("뭔가 문제 발생");
+            }
+
+        }
+
+    }
+
+    submitBtn.addEventListener('click', function () {
+        let uId = document.querySelector("#userId").value;
+        let uPwd = document.querySelector("#userPwd").value;
+
+        if (uId != null && uPwd != null) {
+            loginAction(uId, uPwd);
+        } else {
+            window.location.reload();
+        }
+
+    });
 
 
 </script>
@@ -120,10 +154,12 @@
         background-color: #fff;
         color: #333;
     }
+
     p {
         text-align: center;
         margin-top: 20px;
     }
+
     .signup-box {
         text-align: center;
         margin-top: 20px;
