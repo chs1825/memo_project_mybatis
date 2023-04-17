@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="/WEB-INF/js/common.js"></script>
     <title>Title</title>
 </head>
 <body>
@@ -27,18 +28,34 @@
 <script>
     let submitBtn = document.querySelector("#submitBtn");
 
-
-    function param2Json(data) {
-        console.log(data);
-
-        console.log(JSON.stringify(data));
-
-    }
-
     function loginAction(uId, uPwd) {
 
-        let data = {uId, uPwd};
-        param2Json(data);
+        // let data = {uId, uPwd};
+        let data = {
+            "name": "John",
+            "age": 30,
+            "address": {
+                "city": "Seoul",
+                "street": "123 Main St",
+                "zipcode": "12345"
+            },
+            "contacts": [
+                {
+                    "type": "email",
+                    "value": "john@example.com"
+                },
+                {
+                    "type": "phone",
+                    "value": "555-1234"
+                }
+            ],
+            "hobbies": {
+                "indoor": ["reading", "puzzles"],
+                "outdoor": ["hiking", "biking"]
+            }
+        }
+
+        // data = jsonToParam(data);
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', 'loginAction.do');
@@ -52,6 +69,9 @@
 
         }
 
+        console.log(data);
+        console.log(jsonToParam(data));
+        xhr.send(jsonToParam(data));
     }
 
     submitBtn.addEventListener('click', function () {
