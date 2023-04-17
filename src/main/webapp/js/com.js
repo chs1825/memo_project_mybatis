@@ -1,6 +1,6 @@
 function jsonToParam(jsonData) {
     console.log("함수야 연결되라!")
-    console.log(jsondata);
+    console.log(jsonData);
     if (!jsonData || typeof jsonData !== 'object') return jsonData;
     const paramArr = [];
     for (const key in jsonData) {

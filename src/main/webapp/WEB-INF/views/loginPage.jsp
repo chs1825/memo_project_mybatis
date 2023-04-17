@@ -4,7 +4,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script type="text/javascript" src="/WEB-INF/js/common.js"></script>
     <title>Title</title>
 </head>
 <body>
@@ -24,6 +23,7 @@
         <p>Don't have an account? <a href="#">Sign up</a></p>
     </form>
 </div>
+<script src="/com.js"></script>
 </body>
 <script>
     let submitBtn = document.querySelector("#submitBtn");
