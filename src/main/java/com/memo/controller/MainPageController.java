@@ -2,6 +2,7 @@ package com.memo.controller;
 
 import com.memo.service.TestService;
 import com.memo.vo.UserVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,16 +10,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequestMapping("/")
-public class RestController {
+public class MainPageController {
 
     private TestService service;
 
-    public RestController(TestService service) {
+    public MainPageController(TestService service) {
         this.service = service;
     }
 
@@ -41,15 +46,37 @@ public class RestController {
         return "index";
     }
 
-    @RequestMapping("/main")
-    public String mainpage(Model model){
+    @RequestMapping("/mainPage.do")
+    public String mainpage(Model model, HttpServletRequest request, String id){
 
-        List<UserVO> list = service.getAllUser();
-        System.out.println("list = " + list);
-        model.addAttribute("data",list);
-
-        return "mainPage";
+        log.debug("id확인:,{}", id);
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
+        UserVO userVO = (UserVO) session.getAttribute("user"+id);
+        log.debug("userVO 확인:,{}", userVO);
+        if(userVO == null){
+            return "redirect:/";
+        }else{
+            return "mainPage";
+        }
+        /*
+        Cookie[] cookies = request.getCookies();
+        log.debug("cookies: ,{}", cookies.toString());
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                log.debug("cookie 확인: , {}", cookie.getName());
+                if(cookie.getName().equals("login") && cookie.getValue().equals("true")){
+                    return "mainPage";
+                }
+            }
+        }*/
     }
+
+
+
+
+
+
 
     @PostMapping("/main/ajaxPost.do")
     @ResponseBody

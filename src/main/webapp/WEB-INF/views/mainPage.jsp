@@ -20,6 +20,8 @@ hello world
 <button type="button" id="ajaxBtnPost" name="ajaxBtnName">ajax Post 통신 테스트</button>
 <br>
 <button type="button" id="movePage" onclick="mvPage()">파일리스트 페이지 이동</button>
+<br>
+<button type="button" id="logout" onclick="location.href='logout.do'">파일리스트 페이지 이동</button>
 
 </body>
 

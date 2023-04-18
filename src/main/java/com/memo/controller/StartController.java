@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -34,14 +35,15 @@ public class StartController {
     public String loginAction(UserVO param, HttpSession session, HttpServletResponse response){
 
         log.debug("param : ,{}", param);
-        boolean res = userService.loginAction(param,session);
+        boolean isAuth = userService.loginAction(param);
 
 
-        if(res){
-            Cookie cookie = new Cookie("session_id", session.getId());
-            cookie.setMaxAge(60*60*1);
-            cookie.setPath("/");
-            response.addCookie(cookie);
+        if(isAuth){
+            session.setAttribute("user"+param.getId(),param);
+//            Cookie cookie = new Cookie("session_id", session.getId());
+//            cookie.setMaxAge(60*60*1);
+//            cookie.setPath("/");
+//            response.addCookie(cookie);
 
             return "success";
         }else{
@@ -49,6 +51,12 @@ public class StartController {
         }
     }
 
+    @RequestMapping("/logout.do")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        return "redirect:/";
+    }
 
 
 }

@@ -24,9 +24,42 @@
     </form>
 </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src="/resources/js/common.js"></script>
 <script>
     let submitBtn = document.querySelector("#submitBtn");
+
+    function loginActaionAxios(id, pass){
+        const data = jsonToParam({id, pass});
+
+        axios
+            .post("loginAction.do", data)
+            .then(response => {
+                console.log(response.data);
+                if(response.data === 'success'){
+                    axios
+                        .post("mainPage.do",{id})
+                        .then(() =>{
+
+                        })
+                        .catch(error =>{
+                            console.error(error);
+                        });
+                }else{
+                    window.location.reload();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+
+
+
+
+
+
 
     function loginAction(id, pass) {
 
@@ -39,10 +72,11 @@
             if (xhr.status === 200) {
                 console.log(xhr.responseText);
                 if(xhr.responseText === "success"){
-                    let cookie = document.cookie;
-                    console.log(cookie);
+                    // let cookie = document.cookie;
+                    // console.log(cookie)
+                    window.location.href = "mainPage.do?id="+id;
                 }else{
-
+                    window.location.reload();
                 }
             } else {
                 console.error("뭔가 문제 발생");
@@ -58,6 +92,7 @@
 
         if (uId != null && uPwd != null) {
             loginAction(uId, uPwd);
+            // loginActaionAxios(uId,uPwd);
         } else {
             window.location.reload();
         }

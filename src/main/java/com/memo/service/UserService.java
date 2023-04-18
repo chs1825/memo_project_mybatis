@@ -6,6 +6,6 @@ import javax.servlet.http.HttpSession;
 
 public interface UserService {
 
-    public boolean loginAction(UserVO userVO, HttpSession session);
+    public boolean loginAction(UserVO userVO);
 
 }

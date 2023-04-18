@@ -15,15 +15,13 @@ public class UserServiceImpl implements UserService{
         this.mapper = mapper;
     }
 
-    public boolean loginAction(UserVO userVO, HttpSession session) {
+    public boolean loginAction(UserVO userVO) {
 
         String id = userVO.getId();
         String pass = userVO.getPass();
 
         UserVO user = mapper.selectById(id);
         if(user != null && user.getPass().equals(pass)){
-
-            session.setAttribute("loginUser",user);
             return true;
         }else{
             return false;
