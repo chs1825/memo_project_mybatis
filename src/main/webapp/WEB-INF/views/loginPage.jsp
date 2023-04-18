@@ -23,8 +23,9 @@
         <p>Don't have an account? <a href="#">Sign up</a></p>
     </form>
 </div>
-<script src="/com.js"></script>
 </body>
+<script type="text/javascript" src="/js/test.js"></script>
+<script type="text/javascript" src="/resources/js/common.js"></script>
 <script>
     let submitBtn = document.querySelector("#submitBtn");
 
@@ -42,7 +43,7 @@
             "contacts": [
                 {
                     "type": "email",
-                    "value": "john@example.com"
+                    "value": "john@example.comdas"
                 },
                 {
                     "type": "phone",
