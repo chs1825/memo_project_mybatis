@@ -19,9 +19,11 @@ hello world
 <br>
 <button type="button" id="ajaxBtnPost" name="ajaxBtnName">ajax Post 통신 테스트</button>
 <br>
-<button type="button" id="movePage" onclick="mvPage()">파일리스트 페이지 이동</button>
+<button type="button" id="moveFilePage" onclick="mvFilePage()">파일리스트 페이지 이동</button>
 <br>
-<button type="button" id="logout" onclick="location.href='logout.do'">파일리스트 페이지 이동</button>
+<button type="button" id="moveExcelPage" onclick="location.href='excelPage.do'">엑셀 페이지 이동</button>
+<br>
+<button type="button" id="logout" onclick="location.href='logout.do'">로그아웃 버튼</button>
 
 </body>
 
@@ -29,7 +31,7 @@ hello world
 
 <script>
 
-    function mvPage() {
+    function mvFilePage() {
         location.href = "/filePage/start.do"
     }
 
