@@ -66,6 +66,7 @@ public class RestController {
         return "oh!";
     }
 
+
     @PostMapping("/main/ajaxModel.do")
     public String ajaxTest3(UserVO param, Model model){
         System.out.println("param = " + param);

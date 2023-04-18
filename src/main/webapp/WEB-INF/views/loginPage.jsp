@@ -24,54 +24,31 @@
     </form>
 </div>
 </body>
-<script type="text/javascript" src="/js/test.js"></script>
 <script type="text/javascript" src="/resources/js/common.js"></script>
 <script>
     let submitBtn = document.querySelector("#submitBtn");
 
-    function loginAction(uId, uPwd) {
+    function loginAction(id, pass) {
 
-        // let data = {uId, uPwd};
-        let data = {
-            "name": "John",
-            "age": 30,
-            "address": {
-                "city": "Seoul",
-                "street": "123 Main St",
-                "zipcode": "12345"
-            },
-            "contacts": [
-                {
-                    "type": "email",
-                    "value": "john@example.comdas"
-                },
-                {
-                    "type": "phone",
-                    "value": "555-1234"
-                }
-            ],
-            "hobbies": {
-                "indoor": ["reading", "puzzles"],
-                "outdoor": ["hiking", "biking"]
-            }
-        }
-
-        // data = jsonToParam(data);
-
+        let data = {id, pass};
         let xhr = new XMLHttpRequest();
         xhr.open('POST', 'loginAction.do');
-        xhr.setRequestHeader('Content-Type', 'application/json');
+        // xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader("Content-Type", 'application/x-www-form-urlencoded')
         xhr.onload = function () {
             if (xhr.status === 200) {
+                console.log(xhr.responseText);
+                if(xhr.responseText === "success"){
+                    let cookie = document.cookie;
+                    console.log(cookie);
+                }else{
 
+                }
             } else {
                 console.error("뭔가 문제 발생");
             }
 
         }
-
-        console.log(data);
-        console.log(jsonToParam(data));
         xhr.send(jsonToParam(data));
     }
 

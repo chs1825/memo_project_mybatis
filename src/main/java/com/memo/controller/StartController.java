@@ -1,15 +1,28 @@
 package com.memo.controller;
 
+import com.memo.service.UserService;
+import com.memo.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/")
 @Slf4j
 public class StartController {
+
+    private UserService userService;
+
+    public StartController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
     public String loginPage(){
@@ -17,10 +30,23 @@ public class StartController {
     }
 
     @PostMapping("/loginAction.do")
-    public String loginAction(){
+    @ResponseBody
+    public String loginAction(UserVO param, HttpSession session, HttpServletResponse response){
+
+        log.debug("param : ,{}", param);
+        boolean res = userService.loginAction(param,session);
 
 
-        return "";
+        if(res){
+            Cookie cookie = new Cookie("session_id", session.getId());
+            cookie.setMaxAge(60*60*1);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
+            return "success";
+        }else{
+            return "fail";
+        }
     }
 
 

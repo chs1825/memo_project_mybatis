@@ -1,6 +1,4 @@
 function jsonToParam(jsonData) {
-    console.log("함수야 연결되라!")
-    console.log(jsonData);
     if (!jsonData || typeof jsonData !== 'object') return jsonData;
     const paramArr = [];
     for (const key in jsonData) {
@@ -23,5 +21,6 @@ function jsonToParam(jsonData) {
             }
         }
     }
-    return paramArr.join('&');
+    return paramArr.join('&').trim();
+
 }

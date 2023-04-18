@@ -7,6 +7,9 @@ public class UserVO {
     private String id;
     private String name;
     private String email;
+    private String pass;
+
+
 
     public String getId() {
         return id;
@@ -32,12 +35,21 @@ public class UserVO {
         this.email = email;
     }
 
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
     @Override
     public String toString() {
         return "UserVO{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", pass='" + pass + '\'' +
                 '}';
     }
 }
