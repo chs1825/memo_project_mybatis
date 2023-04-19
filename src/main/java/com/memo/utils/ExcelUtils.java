@@ -1,5 +1,6 @@
 package com.memo.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Component
+@Slf4j
 public class ExcelUtils {
 
 
@@ -46,25 +48,35 @@ public class ExcelUtils {
             int cnt = 0;
             for (Row row : sheet) {
                 List<String> list = new ArrayList<String>();
+                log.debug("sss:,{}",row.getCell(2));
                 for (Cell cell : row) {
+                    log.debug("cell:,{}" , cell.getCellType());
+
+
                     String value = "";
-                    switch (cell.getCellType()) {
-                        case FORMULA:
-                            value = cell.getCellFormula();
-                            break;
-                        case NUMERIC:
-                            double v = Double.valueOf(cell.getNumericCellValue()).doubleValue();
-                            value = df.format(v);
-                            break;
-                        case STRING:
-                            value = cell.getStringCellValue() + "";
-                            break;
-                        case BLANK:
-                            value = "";
-                            break;
-                        case ERROR:
-                            value = cell.getErrorCellValue() + "";
-                            break;
+                    log.debug("cell.toString():,{}", cell.toString());
+                    log.debug("cell.getCellType() : , {}" , cell.getCellType());
+                    if(cell.getCellType() == null){
+                        value="a";
+                    }else{
+                        switch (cell.getCellType()) {
+                            case FORMULA:
+                                value = cell.getCellFormula();
+                                break;
+                            case NUMERIC:
+                                double v = Double.valueOf(cell.getNumericCellValue()).doubleValue();
+                                value = df.format(v);
+                                break;
+                            case STRING:
+                                value = cell.getStringCellValue() + "";
+                                break;
+                            case BLANK:
+                                value = "a";
+                                break;
+                            case ERROR:
+                                value = cell.getErrorCellValue() + "";
+                                break;
+                        }
                     }
                     list.add(value);
                 }
@@ -103,7 +115,7 @@ public class ExcelUtils {
                             value = cell.getStringCellValue() + "";
                             break;
                         case BLANK:
-                            value = "";
+                            value = "a";
                             break;
                         case ERROR:
                             value = cell.getErrorCellValue() + "";
