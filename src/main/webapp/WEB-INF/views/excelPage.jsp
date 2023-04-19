@@ -17,6 +17,12 @@
 <input type="file" id="file" value="파일 선택">
 <button type="button" id="uploadBtn">파일 업로드 진행</button>
 
+<hr>
+<div>
+    <h5>엑셀 내용</h5>
+    <div id="resDiv"></div>
+</div>
+
 </body>
 <script>
     let upload = document.querySelector('#uploadBtn');
@@ -33,12 +39,18 @@
 
         xhr.onload = function (){
             if(xhr.status === 200){
-                console.log("success");
                 console.log(xhr.response);
 
                 var res = JSON.parse(xhr.responseText);
                 console.log(res.mapData);
                 console.log(res.listData);
+
+                let resDiv = document.querySelector('#resDiv');
+                Object.keys(res.mapData).forEach(function(key) {
+                    let div = document.createElement('div');
+                    div.textContent = res.mapData[key];
+                    resDiv.appendChild(div);
+                });
 
             }else{
                 console.log("error");

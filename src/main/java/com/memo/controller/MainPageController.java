@@ -59,17 +59,7 @@ public class MainPageController {
         }else{
             return "mainPage";
         }
-        /*
-        Cookie[] cookies = request.getCookies();
-        log.debug("cookies: ,{}", cookies.toString());
-        if(cookies != null){
-            for(Cookie cookie : cookies){
-                log.debug("cookie 확인: , {}", cookie.getName());
-                if(cookie.getName().equals("login") && cookie.getValue().equals("true")){
-                    return "mainPage";
-                }
-            }
-        }*/
+
     }
 
 
