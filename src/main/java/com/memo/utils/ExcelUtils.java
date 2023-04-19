@@ -11,11 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @Component
 @Slf4j
 public class ExcelUtils {
@@ -48,35 +47,27 @@ public class ExcelUtils {
             int cnt = 0;
             for (Row row : sheet) {
                 List<String> list = new ArrayList<String>();
-                log.debug("sss:,{}",row.getCell(2));
-                for (Cell cell : row) {
-                    log.debug("cell:,{}" , cell.getCellType());
 
-
+                for(int cn = 0; cn < row.getLastCellNum(); cn ++){
+                    Cell cell = row.getCell(cn,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     String value = "";
-                    log.debug("cell.toString():,{}", cell.toString());
-                    log.debug("cell.getCellType() : , {}" , cell.getCellType());
-                    if(cell.getCellType() == null){
-                        value="a";
-                    }else{
-                        switch (cell.getCellType()) {
-                            case FORMULA:
-                                value = cell.getCellFormula();
-                                break;
-                            case NUMERIC:
-                                double v = Double.valueOf(cell.getNumericCellValue()).doubleValue();
-                                value = df.format(v);
-                                break;
-                            case STRING:
-                                value = cell.getStringCellValue() + "";
-                                break;
-                            case BLANK:
-                                value = "a";
-                                break;
-                            case ERROR:
-                                value = cell.getErrorCellValue() + "";
-                                break;
-                        }
+                    switch (cell.getCellType()) {
+                        case FORMULA:
+                            value = cell.getCellFormula();
+                            break;
+                        case NUMERIC:
+                            double v = Double.valueOf(cell.getNumericCellValue()).doubleValue();
+                            value = df.format(v);
+                            break;
+                        case STRING:
+                            value = cell.getStringCellValue() + "";
+                            break;
+                        case BLANK:
+                            value = "";
+                            break;
+                        case ERROR:
+                            value = cell.getErrorCellValue() + "";
+                            break;
                     }
                     list.add(value);
                 }
@@ -101,7 +92,9 @@ public class ExcelUtils {
             int cnt = 0;
             for (Row row : sheet) {
                 List<String> list = new ArrayList<String>();
-                for (Cell cell : row) {
+
+                for(int cn = 0; cn < row.getLastCellNum(); cn ++){
+                    Cell cell = row.getCell(cn,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     String value = "";
                     switch (cell.getCellType()) {
                         case FORMULA:
@@ -115,7 +108,7 @@ public class ExcelUtils {
                             value = cell.getStringCellValue() + "";
                             break;
                         case BLANK:
-                            value = "a";
+                            value = "";
                             break;
                         case ERROR:
                             value = cell.getErrorCellValue() + "";
