@@ -1,5 +1,6 @@
 package com.memo.controller;
 
+import com.memo.service.ExcelService;
 import com.memo.utils.ExcelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -23,10 +24,12 @@ import java.util.Map;
 @RequestMapping("/")
 public class ExcelController {
 
+    private ExcelService excelService;
     private ExcelUtils excelUtils;
 
-    public ExcelController(ExcelUtils excelUtils) {
+    public ExcelController(ExcelUtils excelUtils, ExcelService excelService) {
         this.excelUtils = excelUtils;
+        this.excelService = excelService;
     }
 
     @RequestMapping("/excelPage.do")
@@ -38,14 +41,18 @@ public class ExcelController {
     @PostMapping("/uploadExcel.do")
     public String excelAction(@RequestParam MultipartFile excelFile, Model model) {
 
+
+        //1. poi 엑셀 처리
         log.debug("excelFile.getOriginalFilename():,{}", excelFile.getOriginalFilename());
-
-
         Map<Integer, List<String>> resMap = excelUtils.handleExcel(excelFile);
         log.debug("Map<Integer, List<String>> resMap = , {}" , resMap);
 
+        //2. DB 처리
+
+
+
+
         model.addAttribute("mapData", resMap);
-        model.addAttribute("listData", new String[]{"s", "d"});
 
         return "jsonview";
     }
