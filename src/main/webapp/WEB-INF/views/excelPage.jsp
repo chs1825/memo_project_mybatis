@@ -14,29 +14,40 @@
 <h5>여기는 엑셀 페이지</h5>
 <br>
 
-<div id="myTable"></div>
+<input type="file" id="file" value="파일 선택">
+<button type="button" id="uploadBtn">파일 업로드 진행</button>
+
 </body>
 <script>
-    window.onload = function () {
-        const table = document.createElement('table');
-        for (let i = 0; i < 10; i++) {
-            const tr = document.createElement('tr');
-            tr.style.border = "1px solid black";
+    let upload = document.querySelector('#uploadBtn');
+    upload.addEventListener('click',function(){
+        let file = document.querySelector('#file');
+        const excelFile = file.files[0];
+        let form = new FormData();
+        form.append('excelFile', excelFile);
 
-            for (let j = 0; j < 10; j++) {
-                const td = document.createElement('td');
-                td.style.border = "1px solid black";
-                tr.appendChild(td);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'uploadExcel.do');
+        xhr.setRequestHeader('enctype', 'multipart/form-data');
+        xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+
+        xhr.onload = function (){
+            if(xhr.status === 200){
+                console.log("success");
+                console.log(xhr.response);
+
+                var res = JSON.parse(xhr.responseText);
+                console.log(res.mapData);
+                console.log(res.listData);
+
+            }else{
+                console.log("error");
             }
-            table.appendChild(tr);
         }
-        table.style.border = "1px solid black";
-        table.style.width = "1200px";
-        table.style.height = "1200px";
-        document.getElementById('myTable').appendChild(table);
-    }
+        xhr.send(form);
+    });
+
 
 </script>
-
 
 </html>
