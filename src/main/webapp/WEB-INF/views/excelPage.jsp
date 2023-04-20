@@ -43,14 +43,21 @@
 
                 var res = JSON.parse(xhr.responseText);
                 console.log(res.mapData);
-                console.log(res.listData);
 
                 let resDiv = document.querySelector('#resDiv');
-                Object.keys(res.mapData).forEach(function(key) {
+
+                res.mapData.forEach(function(row) {
                     let div = document.createElement('div');
-                    div.textContent = res.mapData[key];
+                    row.forEach(function(item) {
+                        let span = document.createElement('span');
+                        let keys = Object.keys(item);
+                        span.textContent = keys[0] + ': ' + item[keys[0]];
+                        div.appendChild(span);
+                    });
                     resDiv.appendChild(div);
                 });
+
+
 
             }else{
                 console.log("error");

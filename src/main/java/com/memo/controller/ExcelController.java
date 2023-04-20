@@ -2,22 +2,16 @@ package com.memo.controller;
 
 import com.memo.service.ExcelService;
 import com.memo.utils.ExcelUtils;
+import com.memo.utils.PoiExample;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -39,20 +33,20 @@ public class ExcelController {
 
 
     @PostMapping("/uploadExcel.do")
-    public String excelAction(@RequestParam MultipartFile excelFile, Model model) {
+    public String excelAction(@RequestParam MultipartFile excelFile, Model model) throws IOException {
 
 
         //1. poi 엑셀 처리
         log.debug("excelFile.getOriginalFilename():,{}", excelFile.getOriginalFilename());
-        Map<Integer, List<String>> resMap = excelUtils.handleExcel(excelFile);
-        log.debug("Map<Integer, List<String>> resMap = , {}" , resMap);
+        log.debug("Map<Integer, List<String>> resMap = , {}" , excelUtils.handleExcel(excelFile));
 
-        //2. DB 처리
-
-
+        //2. 엑셀 데이터 변환 및 DB insert 처리
+        excelService.insertExcel(excelFile);
 
 
-        model.addAttribute("mapData", resMap);
+
+
+        model.addAttribute("mapData", excelUtils.handleExcel(excelFile));
 
         return "jsonview";
     }
