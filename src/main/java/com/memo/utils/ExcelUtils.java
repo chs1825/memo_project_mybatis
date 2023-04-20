@@ -21,10 +21,10 @@ public class ExcelUtils {
 
     private DecimalFormat df = new DecimalFormat("#.##");
 
-    public List<List<Map<String, String>>> handleExcel(MultipartFile file) {
+    public List<Map<String, String>> handleExcel(MultipartFile file) {
 
         // 결과를 담을 리스트
-        List<List<Map<String, String>>> resList = new ArrayList<List<Map<String, String>>>();
+        List<Map<String, String>> resList = new ArrayList<Map<String, String>>();
         // 컬럼명 추출 리스트
         List<String> columnNameList = new ArrayList<String>();
         //파일 이름
@@ -49,24 +49,24 @@ public class ExcelUtils {
             if(i ==0){//row에 대한 데이터가 컬럼명이라면
                 columnNameList = cellList;
             }else{//결과값 생성
-               resList.add(getRowDataList(columnNameList,cellList));
+               resList.add(getRowDataMap(columnNameList,cellList));
             }
         }
         return resList;
     }
 
-    private List<Map<String, String>> getRowDataList(List<String> columnNameList, List<String> cellList) {
+    private Map<String, String> getRowDataMap(List<String> columnNameList, List<String> cellList) {
 
-        List<Map<String, String>> resList = new ArrayList<Map<String, String>>();
+
 
         // 컬럼명과 일반 데이터를 조합하고 map에 담아 리스트에 추가하는 과정
+        Map<String, String> resMap = new HashMap<String, String>();
         for (int i = 0; i < columnNameList.size(); i++) {
-            Map<String, String> paramMap = new HashMap<String, String>();
-            paramMap.put(columnNameList.get(i), cellList.get(i));
-            resList.add(paramMap);
+            resMap.put(columnNameList.get(i), cellList.get(i));
+
         }
 
-        return resList;
+        return resMap;
     }
 
 

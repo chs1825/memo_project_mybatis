@@ -19,9 +19,10 @@ import java.io.IOException;
 public class ExcelController {
 
     private ExcelService excelService;
+
     private ExcelUtils excelUtils;
 
-    public ExcelController(ExcelUtils excelUtils, ExcelService excelService) {
+    public ExcelController(ExcelService excelService,ExcelUtils excelUtils) {
         this.excelUtils = excelUtils;
         this.excelService = excelService;
     }
@@ -41,7 +42,7 @@ public class ExcelController {
         log.debug("Map<Integer, List<String>> resMap = , {}" , excelUtils.handleExcel(excelFile));
 
         //2. 엑셀 데이터 변환 및 DB insert 처리
-        excelService.insertExcel(excelFile);
+//        excelService.insertExcel(excelFile);
 
 
 
