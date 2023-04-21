@@ -2,7 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.memo.mapper.ExcelMapper">
-    <select id="insertExcel" parameterType="map">
 
-    </select>
+    <insert id="insertUserByExcel" parameterType="list">
+        insert into user_info (id, name, age, gender)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.name}, #{item.age}, #{item.gender}
+        </foreach>
+    </insert>
+
+    <insert id="insertNationByExcel" parameterType="list">
+        insert into user_nation (id, nation_code)
+        values
+        <foreach collection="list" item="item" separator=",">
+            <if test="item != null and item.id != null and item.nation != null and item.nation.trim().length() > 0">
+                (#{item.id},
+                (select nation_code from nation where nation_name=#{item.nation}))
+            </if>
+        </foreach>
+    </insert>
+
 </mapper>

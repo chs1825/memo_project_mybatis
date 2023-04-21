@@ -4,6 +4,7 @@ import com.memo.service.ExcelService;
 import com.memo.utils.ExcelUtils;
 import com.memo.utils.PoiExample;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +43,7 @@ public class ExcelController {
         log.debug("Map<Integer, List<String>> resMap = , {}" , excelUtils.handleExcel(excelFile));
 
         //2. 엑셀 데이터 변환 및 DB insert 처리
-//        excelService.insertExcel(excelFile);
+        excelService.insertExcel(excelFile);
 
 
 

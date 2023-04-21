@@ -9,6 +9,8 @@ import java.util.Map;
 @Mapper
 public interface ExcelMapper {
 
-    public void insertExcel(Map<String, List<String>> map);
 
+    public void insertUserByExcel(List<Map<String, String>> processedList);
+
+    public void insertNationByExcel(List<Map<String, String>> processedList);
 }
