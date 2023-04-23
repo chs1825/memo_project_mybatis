@@ -1,6 +1,9 @@
 package com.memo.convertJson.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.memo.convertJson.vo.JSonVO;
+import com.memo.convertJson.vo.MetaDataVO;
+import com.memo.convertJson.vo.UtteranceVO;
 import com.memo.utils.ExcelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,32 +32,58 @@ public class JsonServiceImpl implements JsonService {
         //1.엑셀 변환
         List<Map<String, String>> dataList = excelUtils.handleExcel(excelFile);
 
-        //2.데이터 처리
+        List<JSonVO> jsonList = new ArrayList<JSonVO>();
+        for(int i =0; i < dataList.size(); i++){
 
-        //2-1.아이디 생성
-        List<String> idList = makeJsonID(dataList.size());
+            //2.데이터 처리
+            JSonVO jSonVO = new JSonVO();
+            MetaDataVO metaDataVO = new MetaDataVO();
+            UtteranceVO utteranceVO = new UtteranceVO();
+            String text = dataList.get(i).get("보도자료 본문");
 
-        //2-2. 어절수 세기
-//        int wordCnt = countWord();
+            //2-1.아이디 생성
+            jSonVO.setId("JSON"+ i);
 
-        //2-3 본문 분리시켜주기
+            // 2-2 MetaDataVO 생성
+            metaDataVO.setDate(Long.parseLong(dataList.get(i).get("생성일")));
+            metaDataVO.setOrgan_name(dataList.get(i).get("기관명"));
+            metaDataVO.setOrgan_class(dataList.get(i).get("기관 특성"));
+            metaDataVO.setTitle(dataList.get(i).get("보도자료 제목"));
+            metaDataVO.setCharge(dataList.get(i).get("평가 모둠"));
+            //어절수 세기
+            int wordCnt = countWord(text);
+            metaDataVO.setWord_cnt(String.valueOf(wordCnt));
 
-        //2-4 메타데이터 부분 만들기
+            //2-3 UtteranceVO 생성
 
-        //3. 2번 목록 하나로 합치기
+            utteranceVO.setUtteranceList(makeUtteranceList(text));
 
+
+            jSonVO.setMetaDataVO(metaDataVO);
+            jSonVO.setUtteranceVO(utteranceVO);
+
+            jsonList.add(jSonVO);
+        }
 
 
         //4.제이슨 파일 생성
         makeJsonFile(dataList);
     }
 
+    private List<Map<String, String>> makeUtteranceList(String text) {
 
-//    private int countWord(Map<String, String> dataMap) {
-//
-//        dataMap.get("보도자료 본문");
-//
-//    }
+        List<Map<String, String>> resList = new ArrayList<Map<String, String>>();
+
+
+        return resList;
+    }
+
+    private int countWord(String text) {
+
+        int res  = 0;
+
+        return res;
+    }
 
 
     private List<String> makeJsonID(int dataSize) {

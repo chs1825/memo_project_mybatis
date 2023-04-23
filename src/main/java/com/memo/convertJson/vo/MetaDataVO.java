@@ -2,7 +2,7 @@ package com.memo.convertJson.vo;
 
 public class MetaDataVO {
 
-    private String date;
+    private long date;
 
     private String organ_name;
 
@@ -14,11 +14,11 @@ public class MetaDataVO {
 
     private String word_cnt;
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
