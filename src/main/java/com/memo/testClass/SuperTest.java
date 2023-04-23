@@ -1,4 +1,4 @@
-package com.memo.controller;
+package com.memo.testClass;
 
 public class SuperTest extends Animal{
 

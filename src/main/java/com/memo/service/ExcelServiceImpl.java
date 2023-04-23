@@ -37,8 +37,8 @@ public class ExcelServiceImpl implements ExcelService {
             log.debug("검사:,{}", dataMap.get("nation"));
 
             if (dataMap.get("nation").contains(",")) {
-                log.debug("컴마가 있네요");
-                processedList.addAll(makeWhat(dataMap));
+                //',' 존재시 분리해주는 로직
+                processedList.addAll(splitMapByComma(dataMap));
             } else {
                 processedList.add(dataMap);
             }
@@ -55,7 +55,7 @@ public class ExcelServiceImpl implements ExcelService {
 
 
 
-    private List<Map<String, String>> makeWhat(Map<String, String> dataMap) {
+    private List<Map<String, String>> splitMapByComma(Map<String, String> dataMap) {
         List<Map<String, String>> resList = new ArrayList<Map<String, String>>();
         String[] arr = dataMap.get("nation").split(",");
         List<String> keyList = new ArrayList<String>();

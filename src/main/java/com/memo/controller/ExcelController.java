@@ -40,7 +40,6 @@ public class ExcelController {
 
         //1. poi 엑셀 처리
         log.debug("excelFile.getOriginalFilename():,{}", excelFile.getOriginalFilename());
-        log.debug("Map<Integer, List<String>> resMap = , {}" , excelUtils.handleExcel(excelFile));
 
         //2. 엑셀 데이터 변환 및 DB insert 처리
         excelService.insertExcel(excelFile);

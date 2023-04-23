@@ -50,23 +50,43 @@ public class ExcelUtils {
             if(i ==0){//row에 대한 데이터가 컬럼명이라면
                 columnNameList = cellList;
             }else{//결과값 생성
+                if(isAllBlank(cellList)){
+                    continue;
+                }
                resList.add(getRowDataMap(columnNameList,cellList));
             }
         }
         return resList;
     }
 
+
+    public boolean isAllBlank(List<String> cellList) {
+        if (cellList == null || cellList.isEmpty()) {
+            return true; // null 또는 빈 리스트는 공백으로 간주합니다.
+        }
+
+        for (String cell : cellList) {
+            if (cell != null && !cell.trim().isEmpty()) {
+                return false; // 문자열에 실제 문자가 포함되어 있으면 false를 반환합니다.
+            }
+        }
+
+        return true; // 모든 문자열이 공백 문자로만 이루어져 있으면 true를 반환합니다.
+    }
+
+
+
+
+
+
+
     private Map<String, String> getRowDataMap(List<String> columnNameList, List<String> cellList) {
-
-
-
         // 컬럼명과 일반 데이터를 조합하고 map에 담아 리스트에 추가하는 과정
         Map<String, String> resMap = new HashMap<String, String>();
         for (int i = 0; i < columnNameList.size(); i++) {
             resMap.put(columnNameList.get(i), cellList.get(i));
 
         }
-
         return resMap;
     }
 

@@ -15,7 +15,7 @@
 <br>
 
 <input type="file" id="file" value="파일 선택">
-<button type="button" id="uploadBtn">파일 업로드 진행</button>
+<button type="button" id="uploadBtn">엑셀 데이터 디비 저장하기</button>
 
 <hr>
 <div>
