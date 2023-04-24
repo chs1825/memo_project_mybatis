@@ -1,5 +1,6 @@
 package com.memo.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class ExcelUtils {
 
@@ -42,7 +44,8 @@ public class ExcelUtils {
 
         //2.시트 생성 및 시트 데이터 추출
         Sheet sheet = workbook.getSheetAt(0);
-
+        log.debug("last로우:{} ", sheet.getLastRowNum());
+        log.debug("last로우:{} ", sheet.getPhysicalNumberOfRows());
         for(int i =0; i <= sheet.getLastRowNum(); i++){
             //시트안의 row 별 데이터 추출
             List<String> cellList = getCellDataList(sheet.getRow(i));
