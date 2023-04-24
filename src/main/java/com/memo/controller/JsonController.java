@@ -1,6 +1,6 @@
 package com.memo.controller;
 
-import com.memo.service.JsonService;
+import com.memo.convertJson.service.JsonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/")
 public class JsonController {
 
-    private JsonService jsonService;
+    private final JsonService jsonService;
 
     public JsonController(JsonService jsonService) {
         this.jsonService = jsonService;

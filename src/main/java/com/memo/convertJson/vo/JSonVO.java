@@ -1,13 +1,15 @@
 package com.memo.convertJson.vo;
 
 
+import java.util.List;
+
 public class JSonVO {
 
     private String id;
 
     private MetaDataVO metaDataVO;
 
-    private UtteranceVO utteranceVO;
+    private List<UtteranceVO> utteranceVOList;
 
     public String getId() {
         return id;
@@ -25,12 +27,12 @@ public class JSonVO {
         this.metaDataVO = metaDataVO;
     }
 
-    public UtteranceVO getUtteranceVO() {
-        return utteranceVO;
+    public List<UtteranceVO> getUtteranceVOList() {
+        return utteranceVOList;
     }
 
-    public void setUtteranceVO(UtteranceVO utteranceVO) {
-        this.utteranceVO = utteranceVO;
+    public void setUtteranceVOList(List<UtteranceVO> utteranceVOList) {
+        this.utteranceVOList = utteranceVOList;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class JSonVO {
         return "JSonVO{" +
                 "id='" + id + '\'' +
                 ", metaDataVO=" + metaDataVO +
-                ", utteranceVO=" + utteranceVO +
+                ", utteranceVOList=" + utteranceVOList +
                 '}';
     }
 }

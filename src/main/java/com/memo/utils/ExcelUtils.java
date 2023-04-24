@@ -43,7 +43,7 @@ public class ExcelUtils {
         //2.시트 생성 및 시트 데이터 추출
         Sheet sheet = workbook.getSheetAt(0);
 
-        for(int i =0; i < sheet.getLastRowNum(); i++){
+        for(int i =0; i <= sheet.getLastRowNum(); i++){
             //시트안의 row 별 데이터 추출
             List<String> cellList = getCellDataList(sheet.getRow(i));
 
@@ -73,10 +73,6 @@ public class ExcelUtils {
 
         return true; // 모든 문자열이 공백 문자로만 이루어져 있으면 true를 반환합니다.
     }
-
-
-
-
 
 
 

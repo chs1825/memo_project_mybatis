@@ -24,8 +24,11 @@
     let convertExcel = document.querySelector('#convertBtn');
     convertExcel.addEventListener('click', function () {
         const excelFile = document.querySelector('#file').files[0];
+        console.log(excelFile);
         let form = new FormData();
         form.append('excelFile', excelFile);
+        console.log(form);
+
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', 'convertExcel.do');

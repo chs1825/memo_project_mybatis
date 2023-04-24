@@ -5,20 +5,32 @@ import java.util.Map;
 
 public class UtteranceVO {
 
-    private List<Map<String,String>> utteranceList;
 
-    public List<Map<String, String>> getUtteranceList() {
-        return utteranceList;
+    private String id;
+
+    private String form;
+
+    public String getId() {
+        return id;
     }
 
-    public void setUtteranceList(List<Map<String, String>> utteranceList) {
-        this.utteranceList = utteranceList;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
     }
 
     @Override
     public String toString() {
         return "UtteranceVO{" +
-                "utteranceList=" + utteranceList +
+                "id='" + id + '\'' +
+                ", form='" + form + '\'' +
                 '}';
     }
 }
