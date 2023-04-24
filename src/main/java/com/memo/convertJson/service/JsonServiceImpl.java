@@ -10,9 +10,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -26,7 +26,7 @@ public class JsonServiceImpl implements JsonService {
         this.excelUtils = excelUtils;
     }
 
-    public void convertJson(MultipartFile excelFile) {
+    public void convertJson(MultipartFile excelFile, HttpServletResponse res) {
         //1.엑셀 변환
         List<Map<String, String>> dataList = excelUtils.handleExcel(excelFile);
 
@@ -64,7 +64,12 @@ public class JsonServiceImpl implements JsonService {
         log.debug("처리된 데이터 개수 : {}" , jsonList.size());
 
         //4.제이슨 파일 생성
-        makeJsonFile(jsonList);
+        String path = makeJsonFile(jsonList, res);
+
+        //5.파일 다운로드
+        downLoadFile(path);
+
+
     }
 
     private List<UtteranceVO> makeUtteranceList(String text) {
@@ -99,16 +104,54 @@ public class JsonServiceImpl implements JsonService {
     }
 
 
-    public void makeJsonFile(List<JSonVO> dataList){
+    public String makeJsonFile(List<JSonVO> dataList, HttpServletResponse res){
         try {
-            String filePath = "/Users/chs/excelToJson/jsonFolder/example.json";
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
+//            File file = new File(filePath);
+//            FileOutputStream fileOutputStream = new FileOutputStream(file);
+//
+//            objectMapper.writeValue(fileOutputStream, dataList);
+//            fileOutputStream.close();
+            ////----------------------
             ObjectMapper objectMapper = new ObjectMapper();
-
+            // .json 파일 생성
+            String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
             File file = new File(filePath);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
-
             objectMapper.writeValue(fileOutputStream, dataList);
             fileOutputStream.close();
+
+            return filePath;
+
+            //다운로드
+            String fileName = file.getName();
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+
+//            byte[] jsonData = fileInputStream.readAllBytes();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            byte[] jsonData = outputStream.toByteArray();
+            fileInputStream.close();
+
+            res.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            res.setContentType("application/json");
+
+            res.setContentLength(jsonData.length);
+
+            ServletOutputStream servletOutputStream = res.getOutputStream();
+            servletOutputStream.write(jsonData);
+            servletOutputStream.flush();
+            servletOutputStream.close();
+
+
 
         }catch (IOException e){
             e.printStackTrace();
