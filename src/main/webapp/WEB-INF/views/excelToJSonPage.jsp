@@ -16,11 +16,21 @@
 <input type="file" id="file" value="파일 선택">
 <button type="button" id="convertBtn">변환하기</button>
 
+<button type="button" id="downBtn">다운로드</button>
+
 
 </body>
 
 
 <script>
+    let downBtn = document.querySelector('#downBtn');
+    downBtn.addEventListener('click', function () {
+        location.href = 'downLoadJson.do';
+    });
+
+
+
+
     let convertExcel = document.querySelector('#convertBtn');
     convertExcel.addEventListener('click', function () {
         const excelFile = document.querySelector('#file').files[0];
@@ -37,8 +47,18 @@
 
         xhr.onload = function (){
             if(xhr.status === 200){
-                console.log("success");
-                // console.log(xhr.responseText);
+                console.log("업로드 success");
+                let path = xhr.responseText;
+                console.log(path);
+                // let downloadxhr = new XMLHttpRequest();
+                // downloadxhr.open('POST','downLoadJson.do');
+                // downloadxhr.setRequestHeader('Content-Type', 'text/plain');
+                // downloadxhr.onload = function (){
+                //     if(downloadxhr.status === 200){
+                //         console.log("다운로드 success");
+                //     }
+                // }
+                // downloadxhr.send(path);
             }else{
                 console.log('error');
             }

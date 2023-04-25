@@ -1,6 +1,9 @@
 package com.memo.convertJson.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.memo.convertJson.vo.JSonVO;
 import com.memo.convertJson.vo.MetaDataVO;
 import com.memo.convertJson.vo.UtteranceVO;
@@ -26,11 +29,11 @@ public class JsonServiceImpl implements JsonService {
         this.excelUtils = excelUtils;
     }
 
-    public void convertJson(MultipartFile excelFile, HttpServletResponse res) {
+    public String convertJson(MultipartFile excelFile) throws IOException {
         //1.엑셀 변환
         List<Map<String, String>> dataList = excelUtils.handleExcel(excelFile);
 
-        log.debug(dataList.toString());
+//        log.debug(dataList.toString());
         log.debug("데이터 개수 : {}", dataList.size());
         List<JSonVO> jsonList = new ArrayList<JSonVO>();
         for(int i =0; i < dataList.size(); i++){
@@ -42,9 +45,9 @@ public class JsonServiceImpl implements JsonService {
 
             //2-1.아이디 생성
             jSonVO.setId("JSON"+ (i+1));
-
+            log.debug("날짜: {}", dataList.get(i).get("생성일"));
             // 2-2 MetaDataVO 생성
-            metaDataVO.setDate(Long.parseLong(dataList.get(i).get("생성일")));
+            metaDataVO.setDate(dataList.get(i).get("생성일"));
             metaDataVO.setOrgan_name(dataList.get(i).get("기관명"));
             metaDataVO.setOrgan_class(dataList.get(i).get("기관 특성"));
             metaDataVO.setTitle(dataList.get(i).get("보도자료 제목"));
@@ -54,8 +57,8 @@ public class JsonServiceImpl implements JsonService {
             metaDataVO.setWord_cnt(String.valueOf(wordCnt));
 
             //3. jsonVO 완성
-            jSonVO.setMetaDataVO(metaDataVO);
-            jSonVO.setUtteranceVOList(makeUtteranceList(text));
+            jSonVO.setMetaData(metaDataVO);
+            jSonVO.setUtterance(makeUtteranceList(text));
 
             //4. 리스트에 넣어주기
             jsonList.add(jSonVO);
@@ -64,11 +67,56 @@ public class JsonServiceImpl implements JsonService {
         log.debug("처리된 데이터 개수 : {}" , jsonList.size());
 
         //4.제이슨 파일 생성
-        String path = makeJsonFile(jsonList, res);
+        String path = makeJsonFile(jsonList);
+
+        return path;
 
         //5.파일 다운로드
-        downLoadFile(path);
+//        downLoadFile(path, res);
 
+
+    }
+
+    @Override
+    public void downloadJson(String path, HttpServletResponse res) throws IOException {
+
+    }
+
+    private void downLoadFile(String path, HttpServletResponse res) throws IOException {
+
+        File file = new File(path);
+        String fileName = file.getName();
+
+        res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+        res.setContentType("application/json");
+
+        InputStream fileInputStream = new FileInputStream(file);
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        ServletOutputStream outputStream = res.getOutputStream();
+        OutputStream outputStream = res.getOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+
+        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+//        byte[] jsonData = outputStream.toByteArray();
+        outputStream.flush();
+        outputStream.close();
+        fileInputStream.close();
+        //다운로드
+
+//        res.setContentLength(jsonData.length);
+
+//        ServletOutputStream servletOutputStream = res.getOutputStream();
+//        servletOutputStream.write(jsonData);
+//        servletOutputStream.flush();
+//        servletOutputStream.close();
+
+        // 파일을 삭제합니다.
+//        file.delete();
 
     }
 
@@ -104,7 +152,7 @@ public class JsonServiceImpl implements JsonService {
     }
 
 
-    public String makeJsonFile(List<JSonVO> dataList, HttpServletResponse res){
+    public String makeJsonFile(List<JSonVO> dataList){
         try {
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
@@ -115,6 +163,11 @@ public class JsonServiceImpl implements JsonService {
 //            fileOutputStream.close();
             ////----------------------
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            objectMapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
+            objectMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+
             // .json 파일 생성
             String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
             File file = new File(filePath);
@@ -123,38 +176,9 @@ public class JsonServiceImpl implements JsonService {
             fileOutputStream.close();
 
             return filePath;
-
-            //다운로드
-            String fileName = file.getName();
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-
-//            byte[] jsonData = fileInputStream.readAllBytes();
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-
-            byte[] jsonData = outputStream.toByteArray();
-            fileInputStream.close();
-
-            res.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-            res.setContentType("application/json");
-
-            res.setContentLength(jsonData.length);
-
-            ServletOutputStream servletOutputStream = res.getOutputStream();
-            servletOutputStream.write(jsonData);
-            servletOutputStream.flush();
-            servletOutputStream.close();
-
-
-
         }catch (IOException e){
             e.printStackTrace();
+            return null;
         }
     }
 }

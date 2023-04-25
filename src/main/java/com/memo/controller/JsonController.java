@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 
 @Slf4j
 @Controller
@@ -31,16 +31,42 @@ public class JsonController {
 
     @ResponseBody
     @RequestMapping("/convertExcel.do")
-    public String convertJson(@RequestParam MultipartFile excelFile, HttpServletResponse res) throws IOException {
+    public String convertJson(@RequestParam MultipartFile excelFile) throws IOException {
 
         log.debug("excelFile.getOriginalFilename():,{}", excelFile.getOriginalFilename());
 
-        jsonService.convertJson(excelFile,res);
-
-
-        log.debug("convertExcel.do 작동");
-        return "hh";
+        return jsonService.convertJson(excelFile);
     }
+
+    @RequestMapping("/downLoadJson.do")
+    public void downLoadJson(@RequestParam String path, HttpServletResponse response) throws IOException {
+        log.debug("/downLoadJson.do 에서 패스 확인 : {} " , path);
+        jsonService.downloadJson(path,response);
+
+        /*String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
+        File file = new File(filePath);
+        String fileName = file.getName();
+
+        response.setContentType("application/json");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+        // 파일 내용을 읽어들여서 response body에 작성합니다.
+        InputStream inputStream = new FileInputStream(file);
+        OutputStream outputStream = response.getOutputStream();
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();*/
+
+        // 다운로드가 완료되면 파일을 삭제합니다.
+//        file.delete();
+
+    }
+
 
 
 

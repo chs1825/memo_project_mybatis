@@ -7,9 +7,10 @@ public class JSonVO {
 
     private String id;
 
-    private MetaDataVO metaDataVO;
+    private MetaDataVO metaData;
 
-    private List<UtteranceVO> utteranceVOList;
+    private List<UtteranceVO> utterance;
+
 
     public String getId() {
         return id;
@@ -19,28 +20,28 @@ public class JSonVO {
         this.id = id;
     }
 
-    public MetaDataVO getMetaDataVO() {
-        return metaDataVO;
+    public MetaDataVO getMetaData() {
+        return metaData;
     }
 
-    public void setMetaDataVO(MetaDataVO metaDataVO) {
-        this.metaDataVO = metaDataVO;
+    public void setMetaData(MetaDataVO metaData) {
+        this.metaData = metaData;
     }
 
-    public List<UtteranceVO> getUtteranceVOList() {
-        return utteranceVOList;
+    public List<UtteranceVO> getUtterance() {
+        return utterance;
     }
 
-    public void setUtteranceVOList(List<UtteranceVO> utteranceVOList) {
-        this.utteranceVOList = utteranceVOList;
+    public void setUtterance(List<UtteranceVO> utterance) {
+        this.utterance = utterance;
     }
 
     @Override
     public String toString() {
         return "JSonVO{" +
                 "id='" + id + '\'' +
-                ", metaDataVO=" + metaDataVO +
-                ", utteranceVOList=" + utteranceVOList +
+                ", metaData=" + metaData +
+                ", utterance=" + utterance +
                 '}';
     }
 }

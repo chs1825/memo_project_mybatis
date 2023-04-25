@@ -2,10 +2,7 @@ package com.memo.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -13,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,8 +104,13 @@ public class ExcelUtils {
                     value = cell.getCellFormula();
                     break;
                 case NUMERIC:
-                    double v = Double.valueOf(cell.getNumericCellValue()).doubleValue();
-                    value = df.format(v);
+                    // 날짜 값이면, SimpleDateFormat을 사용하여 문자열로 변환합니다.
+                    if (DateUtil.isCellDateFormatted(cell)) {
+                        value = new SimpleDateFormat("yyyyMMdd").format(cell.getDateCellValue());
+                    } else {
+                        double v = Double.valueOf(cell.getNumericCellValue()).doubleValue();
+                        value = df.format(v);
+                    }
                     break;
                 case STRING:
                     value = cell.getStringCellValue() + "";
