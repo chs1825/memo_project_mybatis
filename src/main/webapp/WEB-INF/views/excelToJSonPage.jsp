@@ -25,7 +25,7 @@
 <script>
     let downBtn = document.querySelector('#downBtn');
     downBtn.addEventListener('click', function () {
-        location.href = 'downLoadJson.do';
+        location.href = 'downJson.do';
     });
 
 
@@ -50,15 +50,15 @@
                 console.log("업로드 success");
                 let path = xhr.responseText;
                 console.log(path);
-                // let downloadxhr = new XMLHttpRequest();
-                // downloadxhr.open('POST','downLoadJson.do');
-                // downloadxhr.setRequestHeader('Content-Type', 'text/plain');
-                // downloadxhr.onload = function (){
-                //     if(downloadxhr.status === 200){
-                //         console.log("다운로드 success");
-                //     }
-                // }
-                // downloadxhr.send(path);
+                let downloadxhr = new XMLHttpRequest();
+                downloadxhr.open('POST','downLoadJson.do');
+                downloadxhr.setRequestHeader('Content-Type', 'text/plain');
+                downloadxhr.onload = function (){
+                    if(downloadxhr.status === 200){
+                        console.log("다운로드 success");
+                    }
+                }
+                downloadxhr.send(JSON.stringify(path));
             }else{
                 console.log('error');
             }

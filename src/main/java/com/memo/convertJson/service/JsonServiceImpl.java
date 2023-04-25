@@ -79,7 +79,28 @@ public class JsonServiceImpl implements JsonService {
 
     @Override
     public void downloadJson(String path, HttpServletResponse res) throws IOException {
+        File file = new File(path);
+        String fileName = file.getName();
 
+        res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+        res.setContentType("application/json");
+
+        InputStream fileInputStream = new FileInputStream(file);
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        ServletOutputStream outputStream = res.getOutputStream();
+        OutputStream outputStream = res.getOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+
+        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+//        byte[] jsonData = outputStream.toByteArray();
+        outputStream.flush();
+        outputStream.close();
+        fileInputStream.close();
     }
 
     private void downLoadFile(String path, HttpServletResponse res) throws IOException {
