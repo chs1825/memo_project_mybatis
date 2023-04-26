@@ -1,6 +1,8 @@
 package com.memo.convertJson.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class JSonVO {
@@ -35,6 +37,8 @@ public class JSonVO {
     public void setUtterance(List<UtteranceVO> utterance) {
         this.utterance = utterance;
     }
+
+
 
     @Override
     public String toString() {

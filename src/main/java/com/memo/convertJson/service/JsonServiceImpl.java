@@ -36,6 +36,8 @@ public class JsonServiceImpl implements JsonService {
 //        log.debug(dataList.toString());
         log.debug("데이터 개수 : {}", dataList.size());
         List<JSonVO> jsonList = new ArrayList<JSonVO>();
+        int cntForUtterence = 0;
+        int cntForUtterenceAndEnter = 0;
         for(int i =0; i < dataList.size(); i++){
 
             //2.데이터 처리
@@ -58,13 +60,23 @@ public class JsonServiceImpl implements JsonService {
 
             //3. jsonVO 완성
             jSonVO.setMetaData(metaDataVO);
-            jSonVO.setUtterance(makeUtteranceList(text));
+
+            List<UtteranceVO> utteranceVOList = makeUtteranceList(text);
+            if(utteranceVOList.size() == 1) {
+                cntForUtterence++;
+                if(!utteranceVOList.get(0).getForm().contains("\n")){
+                    cntForUtterenceAndEnter++;
+                }
+            }
+            jSonVO.setUtterance(utteranceVOList);
 
             //4. 리스트에 넣어주기
             jsonList.add(jSonVO);
         }
 
         log.debug("처리된 데이터 개수 : {}" , jsonList.size());
+        log.debug("사이즈가 1인 utterence 개수 : {}" , cntForUtterence);
+        log.debug("사이즈가 1인데 개행도 없는 utterence 개수 : {}" , cntForUtterenceAndEnter);
 
         //4.제이슨 파일 생성
         String path = makeJsonFile(jsonList);
@@ -145,10 +157,26 @@ public class JsonServiceImpl implements JsonService {
 
         List<UtteranceVO> resList = new ArrayList<UtteranceVO>();
 
-        String[] textArr = text.split("\\n\n");
+//        String[] textArr = text.split("\\n*\n");
+        String[] textArr = text.split("\\r+\\n+");
+
+        List<String> sList = new ArrayList<String>();
+        for (String item : textArr) {
+            String[] arr = item.split("\n\\s*\n");
+            sList.addAll(Arrays.asList(arr));
+        }
 
         int cnt = 1;
-        for(String item : textArr){
+        for(String item : sList){
+
+            if(item.startsWith("\n")){
+                item = item.substring(1);
+            }
+
+            if(item.endsWith("\n")){
+                item = item.substring(0, item.length() - 1);
+            }
+
             UtteranceVO utteranceVO = new UtteranceVO();
             utteranceVO.setId(String.valueOf(cnt));
             utteranceVO.setForm(item);
@@ -175,18 +203,11 @@ public class JsonServiceImpl implements JsonService {
 
     public String makeJsonFile(List<JSonVO> dataList){
         try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String filePath = "/Users/chs/excelToJson/jsonFolder/excel2json.json";
-//            File file = new File(filePath);
-//            FileOutputStream fileOutputStream = new FileOutputStream(file);
-//
-//            objectMapper.writeValue(fileOutputStream, dataList);
-//            fileOutputStream.close();
-            ////----------------------
+
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
+//            objectMapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
             objectMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
 
             // .json 파일 생성
