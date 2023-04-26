@@ -17,7 +17,9 @@ public class StrText {
         System.out.println(" = " + str.contains("\n\\s*"));
         System.out.println(Arrays.toString(str.split("\n\\s*\n")));
 
-
+        String str2 = " "; // 공백만 있는 문자열
+        boolean result = str2.matches("\\s*"); // 정규식 패턴: 0개 이상의 공백 문자
+        System.out.println(result); // true
 
 
 

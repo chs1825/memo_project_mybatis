@@ -36,8 +36,11 @@ public class JsonServiceImpl implements JsonService {
 //        log.debug(dataList.toString());
         log.debug("데이터 개수 : {}", dataList.size());
         List<JSonVO> jsonList = new ArrayList<JSonVO>();
-        int cntForUtterence = 0;
-        int cntForUtterenceAndEnter = 0;
+        int cntForUtterence = 0; // 사이즈 1인 utterance 개수
+        int cntForUtterenceAndEnter = 0; // 사이즈 1이면서 개행없는 utterance 개수
+        List<String> chkList1 = new ArrayList<String>(); // 사이즈 1인 utterance 아이디 담는 리스트
+        List<String> chkList2 = new ArrayList<String>(); // 사이즈가 1이면서 개행이 없는 utterance 다는 아이디 리스트
+
         for(int i =0; i < dataList.size(); i++){
 
             //2.데이터 처리
@@ -61,11 +64,16 @@ public class JsonServiceImpl implements JsonService {
             //3. jsonVO 완성
             jSonVO.setMetaData(metaDataVO);
 
+            //utterance 만들기
+
+
             List<UtteranceVO> utteranceVOList = makeUtteranceList(text);
             if(utteranceVOList.size() == 1) {
                 cntForUtterence++;
+                chkList1.add(jSonVO.getId());
                 if(!utteranceVOList.get(0).getForm().contains("\n")){
                     cntForUtterenceAndEnter++;
+                    chkList2.add(jSonVO.getId());
                 }
             }
             jSonVO.setUtterance(utteranceVOList);
@@ -76,7 +84,9 @@ public class JsonServiceImpl implements JsonService {
 
         log.debug("처리된 데이터 개수 : {}" , jsonList.size());
         log.debug("사이즈가 1인 utterence 개수 : {}" , cntForUtterence);
+        log.debug("사이즈가 1인 utterence 아이디 : {}" , chkList1);
         log.debug("사이즈가 1인데 개행도 없는 utterence 개수 : {}" , cntForUtterenceAndEnter);
+        log.debug("사이즈가 1인데 개행도 없는 utterence 아이디 : {}" , chkList2);
 
         //4.제이슨 파일 생성
         String path = makeJsonFile(jsonList);
@@ -157,13 +167,21 @@ public class JsonServiceImpl implements JsonService {
 
         List<UtteranceVO> resList = new ArrayList<UtteranceVO>();
 
-//        String[] textArr = text.split("\\n*\n");
         String[] textArr = text.split("\\r+\\n+");
+
 
         List<String> sList = new ArrayList<String>();
         for (String item : textArr) {
             String[] arr = item.split("\n\\s*\n");
-            sList.addAll(Arrays.asList(arr));
+
+            for(int i =0; i < arr.length; i++){
+                if(arr[i].matches("\\s*")){
+                    continue;
+                }else{
+                    arr[i] = arr[i].replaceAll("\\s+$", "");
+                    sList.add(arr[i]);
+                }
+            }
         }
 
         int cnt = 1;
