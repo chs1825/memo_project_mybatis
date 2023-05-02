@@ -1,15 +1,14 @@
 package com.memo.controller;
 
 import com.memo.convertJson.service.JsonService;
+import com.memo.convertJson.vo.InfoAboutJsonVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
@@ -32,7 +31,7 @@ public class JsonController {
 
     @ResponseBody
     @RequestMapping("/convertExcel.do")
-    public String convertJson(@RequestParam MultipartFile excelFile) throws IOException {
+    public InfoAboutJsonVO convertJson(@RequestParam MultipartFile excelFile) throws IOException {
 
         log.debug("excelFile.getOriginalFilename():,{}", excelFile.getOriginalFilename());
 

@@ -1,5 +1,6 @@
 package com.memo.convertJson.service;
 
+import com.memo.convertJson.vo.InfoAboutJsonVO;
 import com.memo.convertJson.vo.JSonVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,8 +10,8 @@ import java.util.List;
 
 public interface JsonService {
 
-    public String convertJson(MultipartFile excelFile) throws IOException;
+    public InfoAboutJsonVO convertJson(MultipartFile excelFile) throws IOException;
 
-    public void downloadJson(String path, HttpServletResponse res) throws IOException;
+//    public void downloadJson(String path, HttpServletResponse res) throws IOException;
 
 }

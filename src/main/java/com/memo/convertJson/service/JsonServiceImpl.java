@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.memo.convertJson.vo.InfoAboutJsonVO;
 import com.memo.convertJson.vo.JSonVO;
 import com.memo.convertJson.vo.MetaDataVO;
 import com.memo.convertJson.vo.UtteranceVO;
@@ -13,10 +14,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -29,13 +33,13 @@ public class JsonServiceImpl implements JsonService {
         this.excelUtils = excelUtils;
     }
 
-    public String convertJson(MultipartFile excelFile) throws IOException {
+    public InfoAboutJsonVO convertJson(MultipartFile excelFile) throws IOException {
         //1.엑셀 변환
         List<Map<String, String>> dataList = excelUtils.handleExcel(excelFile);
 
 //        log.debug(dataList.toString());
         log.debug("데이터 개수 : {}", dataList.size());
-        List<JSonVO> jsonList = new ArrayList<JSonVO>();
+        List<JSonVO> jsonList = new LinkedList<JSonVO>(); // 삽입만 할 리스트이기 때문에 LinkedList 사용
         int cntForUtterence = 0; // 사이즈 1인 utterance 개수
         int cntForUtterenceAndEnter = 0; // 사이즈 1이면서 개행없는 utterance 개수
         List<String> chkList1 = new ArrayList<String>(); // 사이즈 1인 utterance 아이디 담는 리스트
@@ -50,24 +54,29 @@ public class JsonServiceImpl implements JsonService {
 
             //2-1.아이디 생성
             jSonVO.setId("JSON"+ (i+1));
-            log.debug("날짜: {}", dataList.get(i).get("생성일"));
+            log.debug(jSonVO.getId());
+//            log.debug("날짜: {}", dataList.get(i).get("생성일"));
+
             // 2-2 MetaDataVO 생성
             metaDataVO.setDate(dataList.get(i).get("생성일"));
             metaDataVO.setOrgan_name(dataList.get(i).get("기관명"));
             metaDataVO.setOrgan_class(dataList.get(i).get("기관 특성"));
             metaDataVO.setTitle(dataList.get(i).get("보도자료 제목"));
             metaDataVO.setCharge(dataList.get(i).get("평가 모둠"));
-            //어절수 세기
-            int wordCnt = countWord(text);
-            metaDataVO.setWord_cnt(String.valueOf(wordCnt));
+
 
             //3. jsonVO 완성
             jSonVO.setMetaData(metaDataVO);
 
             //utterance 만들기
+            List<String> sList = splitTextForUtternce(text);
+            List<UtteranceVO> utteranceVOList = makeUtterenceVOList(sList);
 
+            //어절수 세기
+            int wordCnt = getWord_cnt(sList);
+            metaDataVO.setWord_cnt(String.valueOf(wordCnt));
 
-            List<UtteranceVO> utteranceVOList = makeUtteranceList(text);
+            //utterence 사이즈 확인하기
             if(utteranceVOList.size() == 1) {
                 cntForUtterence++;
                 chkList1.add(jSonVO.getId());
@@ -82,93 +91,28 @@ public class JsonServiceImpl implements JsonService {
             jsonList.add(jSonVO);
         }
 
-        log.debug("처리된 데이터 개수 : {}" , jsonList.size());
-        log.debug("사이즈가 1인 utterence 개수 : {}" , cntForUtterence);
-        log.debug("사이즈가 1인 utterence 아이디 : {}" , chkList1);
-        log.debug("사이즈가 1인데 개행도 없는 utterence 개수 : {}" , cntForUtterenceAndEnter);
-        log.debug("사이즈가 1인데 개행도 없는 utterence 아이디 : {}" , chkList2);
-
         //4.제이슨 파일 생성
         String path = makeJsonFile(jsonList);
 
-        return path;
+        //5. 반환 정보 세팅
+        InfoAboutJsonVO infoVO = new InfoAboutJsonVO();
 
-        //5.파일 다운로드
-//        downLoadFile(path, res);
+        infoVO.setPath(path);
+        infoVO.setDataSize(jsonList.size());
+        infoVO.setUtterenceNum(cntForUtterence);
+        infoVO.setUtterenceNumId(chkList1);
+        infoVO.setNoEnterUtterenceNum(cntForUtterenceAndEnter);
+        infoVO.setNoEnterUtterenceNumId(chkList2);
 
-
-    }
-
-    @Override
-    public void downloadJson(String path, HttpServletResponse res) throws IOException {
-        File file = new File(path);
-        String fileName = file.getName();
-
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        res.setContentType("application/json");
-
-        InputStream fileInputStream = new FileInputStream(file);
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        ServletOutputStream outputStream = res.getOutputStream();
-        OutputStream outputStream = res.getOutputStream();
-
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-
-        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-
-//        byte[] jsonData = outputStream.toByteArray();
-        outputStream.flush();
-        outputStream.close();
-        fileInputStream.close();
-    }
-
-    private void downLoadFile(String path, HttpServletResponse res) throws IOException {
-
-        File file = new File(path);
-        String fileName = file.getName();
-
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        res.setContentType("application/json");
-
-        InputStream fileInputStream = new FileInputStream(file);
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        ServletOutputStream outputStream = res.getOutputStream();
-        OutputStream outputStream = res.getOutputStream();
-
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-
-        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-
-//        byte[] jsonData = outputStream.toByteArray();
-        outputStream.flush();
-        outputStream.close();
-        fileInputStream.close();
-        //다운로드
-
-//        res.setContentLength(jsonData.length);
-
-//        ServletOutputStream servletOutputStream = res.getOutputStream();
-//        servletOutputStream.write(jsonData);
-//        servletOutputStream.flush();
-//        servletOutputStream.close();
-
-        // 파일을 삭제합니다.
-//        file.delete();
+        return infoVO;
 
     }
 
-    private List<UtteranceVO> makeUtteranceList(String text) {
 
-        List<UtteranceVO> resList = new ArrayList<UtteranceVO>();
+
+    private List<String> splitTextForUtternce(String text) {
 
         String[] textArr = text.split("\\r+\\n+");
-
 
         List<String> sList = new ArrayList<String>();
         for (String item : textArr) {
@@ -185,8 +129,9 @@ public class JsonServiceImpl implements JsonService {
         }
 
         int cnt = 1;
-        for(String item : sList){
-
+        List<String> resList = new ArrayList<String>();
+        for (int i = 0; i < sList.size(); i++) {
+            String item = sList.get(i);
             if(item.startsWith("\n")){
                 item = item.substring(1);
             }
@@ -195,24 +140,54 @@ public class JsonServiceImpl implements JsonService {
                 item = item.substring(0, item.length() - 1);
             }
 
+            resList.add(item);
+        }
+
+        return resList;
+    }
+
+
+    public List<UtteranceVO> makeUtterenceVOList(List<String> sList){
+        List<UtteranceVO> resList = new ArrayList<UtteranceVO>();
+        int cnt = 1;
+        for(String item : sList){
             UtteranceVO utteranceVO = new UtteranceVO();
+
             utteranceVO.setId(String.valueOf(cnt));
             utteranceVO.setForm(item);
             resList.add(utteranceVO);
             cnt++;
         }
+
         return resList;
+    }
+
+
+    public int getWord_cnt(List<String> sList){
+
+
+        int res = 0;
+        for (int i = 0; i < sList.size(); i++) {
+
+            String item = sList.get(i);
+//            System.out.println(String.valueOf(countWord(item)));
+            res += countWord(item);
+        }
+//        System.out.println("총합 = " + res);
+        return res;
     }
 
     private int countWord(String text) {
         int res  = 0;
 
+
         if(text == null || text.isEmpty()){
             return 0;
         }
 
-        String[] words = text.split("\\s+");
-//        log.debug("어절어절어절수: , {}" , words.length);
+        String[] words = text.split("\\ +");
+//        String[] words = text.split("\\s+|\\n");
+//        String[] words = text.split("\\s+");  //나중 업무 대응용
         res = words.length;
 
         return res;

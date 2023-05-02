@@ -25,7 +25,7 @@ public class StartController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/ㅁㅇㅁㄴㅇ")
     public String loginPage(){
         return "loginPage";
     }

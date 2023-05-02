@@ -18,6 +18,13 @@
 
 <button type="button" id="downBtn">다운로드</button>
 
+<hr>
+
+<div id="infoDiv">
+
+
+</div>
+
 
 </body>
 
@@ -48,17 +55,29 @@
         xhr.onload = function (){
             if(xhr.status === 200){
                 console.log("업로드 success");
-                let path = xhr.responseText;
-                console.log(path);
-                let downloadxhr = new XMLHttpRequest();
-                downloadxhr.open('POST','downLoadJson.do');
-                downloadxhr.setRequestHeader('Content-Type', 'text/plain');
-                downloadxhr.onload = function (){
-                    if(downloadxhr.status === 200){
-                        console.log("다운로드 success");
-                    }
-                }
-                downloadxhr.send(JSON.stringify(path));
+                let info = xhr.response;
+                info = JSON.parse(info);
+                console.log(info);
+                console.log(info.path);
+                console.log(info.utterenceNum);
+                console.log(info.noEnterUtterenceNum);
+                let infoDiv = document.querySelector('#infoDiv');
+                infoDiv.innerHTML = "<p>파일 경로: " + info.path + "</p>" +
+                    "<p>총 데이터 수: " + info.dataSize + "개</p>" +
+                    "<p>utterence가 1개인 데이터 수: " + info.utterenceNum + "개</p>" +
+                    "<p>Enter 없고 utterence가 1개인 데이터 수: " + info.noEnterUtterenceNum + "개</p>" +
+                    "<p>Enter 없고 utterence가 1개인 데이터 아이디 목록: " + info.noEnterUtterenceNumId + "</p>";
+
+
+                // let downloadxhr = new XMLHttpRequest();
+                // downloadxhr.open('POST','downLoadJson.do');
+                // downloadxhr.setRequestHeader('Content-Type', 'text/plain');
+                // downloadxhr.onload = function (){
+                //     if(downloadxhr.status === 200){
+                //         console.log("다운로드 success");
+                //     }
+                // }
+                // downloadxhr.send(JSON.stringify(path));
             }else{
                 console.log('error');
             }

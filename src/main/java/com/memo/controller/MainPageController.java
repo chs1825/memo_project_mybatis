@@ -46,7 +46,8 @@ public class MainPageController {
         return "index";
     }
 
-    @RequestMapping("/mainPage.do")
+//    @RequestMapping("/mainPage.do")
+    @RequestMapping("/")
     public String mainpage(Model model, HttpServletRequest request, String id){
 
         log.debug("id확인:,{}", id);
@@ -54,12 +55,12 @@ public class MainPageController {
         String sessionId = session.getId();
         UserVO userVO = (UserVO) session.getAttribute("user"+id);
         log.debug("userVO 확인:,{}", userVO);
-        if(userVO == null){
-            return "redirect:/";
-        }else{
-            return "mainPage";
-        }
-
+//        if(userVO == null){
+//            return "redirect:/";
+//        }else{
+//            return "mainPage";
+//        }
+        return "mainPage";
     }
 
 
