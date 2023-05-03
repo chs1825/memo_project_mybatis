@@ -25,6 +25,8 @@ hello world
 <br>
 <button type="button" id="moveJsonPage" onclick="location.href='jsonPage.do'">엑셀 to 제이슨 페이지 이동</button>
 
+<hr>
+<button type="button" id="moveSignHandPage" onclick="location.href='singHandPage.do'">수어그림 페이지 이동</button>
 
 <br>
 <button type="button" id="logout" onclick="location.href='logout.do'">로그아웃 버튼</button>
