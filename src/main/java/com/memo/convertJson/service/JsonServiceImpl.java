@@ -8,7 +8,7 @@ import com.memo.convertJson.vo.InfoAboutJsonVO;
 import com.memo.convertJson.vo.JSonVO;
 import com.memo.convertJson.vo.MetaDataVO;
 import com.memo.convertJson.vo.UtteranceVO;
-import com.memo.utils.ExcelUtils;
+import com.memo.utils.Excel2JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -27,15 +27,15 @@ import java.util.Map;
 @ComponentScan(basePackages = {"com.memo"})
 public class JsonServiceImpl implements JsonService {
 
-    private ExcelUtils excelUtils;
+    private Excel2JsonUtils excel2JsonUtils;
 
-    public JsonServiceImpl(ExcelUtils excelUtils) {
-        this.excelUtils = excelUtils;
+    public JsonServiceImpl(Excel2JsonUtils excel2JsonUtils) {
+        this.excel2JsonUtils = excel2JsonUtils;
     }
 
     public InfoAboutJsonVO convertJson(MultipartFile excelFile) throws IOException {
         //1.엑셀 변환
-        List<Map<String, String>> dataList = excelUtils.handleExcel(excelFile);
+        List<Map<String, String>> dataList = excel2JsonUtils.handleExcel(excelFile);
 
 //        log.debug(dataList.toString());
         log.debug("데이터 개수 : {}", dataList.size());

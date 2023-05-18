@@ -1,10 +1,8 @@
 package com.memo.controller;
 
 import com.memo.service.ExcelService;
-import com.memo.utils.ExcelUtils;
-import com.memo.utils.PoiExample;
+import com.memo.utils.Excel2JsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +19,10 @@ public class ExcelController {
 
     private ExcelService excelService;
 
-    private ExcelUtils excelUtils;
+    private Excel2JsonUtils excel2JsonUtils;
 
-    public ExcelController(ExcelService excelService,ExcelUtils excelUtils) {
-        this.excelUtils = excelUtils;
+    public ExcelController(ExcelService excelService, Excel2JsonUtils excel2JsonUtils) {
+        this.excel2JsonUtils = excel2JsonUtils;
         this.excelService = excelService;
     }
 
@@ -47,7 +45,7 @@ public class ExcelController {
 
 
 
-        model.addAttribute("mapData", excelUtils.handleExcel(excelFile));
+        model.addAttribute("mapData", excel2JsonUtils.handleExcel(excelFile));
 
         return "jsonview";
     }

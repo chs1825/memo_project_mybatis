@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
 
+
 @Controller
 @Slf4j
 @RequestMapping("/")
@@ -85,7 +86,7 @@ public class MainPageController {
     }
 
 
-    @PostMapping("/main/ajaxModel.do")
+    @PostMapping("/ajaxModel.do")
     public String ajaxTest3(UserVO param, Model model){
         System.out.println("param = " + param);
 

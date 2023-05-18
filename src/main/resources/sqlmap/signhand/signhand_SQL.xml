@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.memo.signhand.mapper.SignhandMapper">
+    <select id="selectAllSignhand" resultType="signhandVO">
+        SELECT * FROM tbl_sign_hand
+    </select>
+
+
+    <select id="selectSignhandByVariation" parameterType="String" resultType="SignhandVO">
+        select hand_id from tbl_sign_hand
+                       where hand_variation = #{variation}
+    </select>
+
+    <select id="selectWordByKeyword" parameterType="searchKeywordVO" resultType="signWordVO">
+        select * from  tbl_sign_word
+                where 1 = 1
+                    <if test="hand !=''">
+                        and sign_hand = #{hand}
+                    </if>
+                    <if test="position !=''">
+                        and sign_hand_position = #{position}
+                    </if>
+                    <if test="number !=''">
+                        and sign_hand_number = #{number}
+                    </if>
+                    <if test="matchingType !=''">
+                        and sign_matching_type = #{matchingType}
+                    </if>
+    </select>
+
+
+
+
+</mapper>

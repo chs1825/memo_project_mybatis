@@ -31,6 +31,10 @@
         const excelFile = file.files[0];
         let form = new FormData();
         form.append('excelFile', excelFile);
+        console.log(form);
+        form.forEach((value, key) => {
+            console.log(key + ": " + value);
+        });
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', 'uploadExcel.do');

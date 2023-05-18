@@ -1,7 +1,7 @@
 package com.memo.service;
 
 import com.memo.mapper.ExcelMapper;
-import com.memo.utils.ExcelUtils;
+import com.memo.utils.Excel2JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ import java.util.*;
 public class ExcelServiceImpl implements ExcelService {
 
     //    private ExcelMapper excelMapper;
-    private ExcelUtils excelUtils;
+    private Excel2JsonUtils excel2JsonUtils;
     private ExcelMapper excelMapper;
 
-    public ExcelServiceImpl(ExcelMapper excelMapper, ExcelUtils excelUtils ) {
+    public ExcelServiceImpl(ExcelMapper excelMapper, Excel2JsonUtils excel2JsonUtils) {
         this.excelMapper = excelMapper;
-        this.excelUtils = excelUtils;
+        this.excel2JsonUtils = excel2JsonUtils;
     }
 
     public void insertExcel(MultipartFile excelFile) {
@@ -28,7 +28,7 @@ public class ExcelServiceImpl implements ExcelService {
 
         List<Map<String, String>> processedList = new ArrayList<Map<String, String>>();
         //1. 엑셀 처리
-        List<Map<String, String>> dataList = excelUtils.handleExcel(excelFile);
+        List<Map<String, String>> dataList = excel2JsonUtils.handleExcel(excelFile);
 
         for (int i = 0; i < dataList.size(); i++) {
 
